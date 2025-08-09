@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package fine;
+
+option go_package = "./;fine";
+
+// Define the LoanFine message
+message LoanFine {
+  string id = 1;
+  string loan_id = 2;
+  float fine_amount = 3;
+  bool paid = 4;
+  string paid_at = 5; // ISO 8601, nullable if not paid
+}
+
+// Request to create a fine
+message CreateFineRequest {
+  LoanFine fine = 1;
+}
+
+// Response when a fine is created
+message CreateFineResponse {
+  string id = 1;
+}
+
+// Request to update a fine
+message UpdateFineRequest {
+  LoanFine fine = 1;
+}
+
+// Response when a fine is updated
+message UpdateFineResponse {
+  bool success = 1;
+}
+
+// Request for listing fines with search, sort, and pagination
+message ListFinesRequest {
+  string search_query = 1;            // Search query to filter by loan_id, fine_amount, etc.
+  string sort_by = 2;                 // Field to sort by (e.g., fine_amount, paid_at, etc.)
+  string sort_order = 3;              // Sort order (asc or desc)
+  int32 page = 4;                     // Page number (for pagination)
+  int32 page_size = 5;                // Number of items per page
+}
+
+// Response when listing fines with pagination
+message ListFinesResponse {
+  repeated LoanFine fines = 1;        // List of fines returned
+  int32 total_count = 2;              // Total number of fines that match the query
+}
+
+// Fine service with CRUD operations
+service FineService {
+  rpc CreateFine(CreateFineRequest) returns (CreateFineResponse);
+  rpc UpdateFine(UpdateFineRequest) returns (UpdateFineResponse);
+  rpc ListFines(ListFinesRequest) returns (ListFinesResponse); // List with pagination, search, and sort
+}

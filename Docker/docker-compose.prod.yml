@@ -1,0 +1,10 @@
+services:
+  grpc-app:
+    container_name: grpc_server_prod
+    image: grpc_server_img:prod
+    build:
+      context: ../
+      dockerfile: Docker/Dockerfile.prod
+    ports:
+      - "50052:50052"
+    restart: unless-stopped

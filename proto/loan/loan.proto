@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package loan;
+
+option go_package = "./;loan";
+
+// Define the Loan message
+message Loan {
+  string id = 1;
+  string book_id = 2;
+  string member_id = 3;
+  string loan_date = 4;     // ISO 8601 string
+  string due_date = 5;      // ISO 8601 string
+  string return_date = 6;   // Nullable, ISO 8601 string
+  string status = 7;        // Example: "borrowed", "returned", "late"
+}
+
+// Request to create a loan
+message CreateLoanRequest {
+  Loan loan = 1;
+}
+
+// Response when a loan is created
+message CreateLoanResponse {
+  string id = 1;
+}
+
+// Request to read a specific loan by ID
+message ReadLoanRequest {
+  string id = 1;
+}
+
+// Response for reading a specific loan
+message ReadLoanResponse {
+  Loan loan = 1;
+}
+
+// Request to update a loan
+message UpdateLoanRequest {
+  Loan loan = 1;
+}
+
+// Response when a loan is updated
+message UpdateLoanResponse {
+  bool success = 1;
+}
+
+// Request to delete a loan
+message DeleteLoanRequest {
+  string id = 1;
+}
+
+// Response when a loan is deleted
+message DeleteLoanResponse {
+  bool success = 1;
+}
+
+// Request for listing loans with search, sort, and pagination
+message ListLoansRequest {
+  string search_query = 1;            // Search query to filter by book_id, member_id, etc.
+  string sort_by = 2;                 // Field to sort by (e.g., loan_date, status, etc.)
+  string sort_order = 3;              // Sort order (asc or desc)
+  int32 page = 4;                     // Page number (for pagination)
+  int32 page_size = 5;                // Number of items per page
+}
+
+// Response when listing loans with pagination
+message ListLoansResponse {
+  repeated Loan loans = 1;            // List of loans returned
+  int32 total_count = 2;              // Total number of loans that match the query
+}
+
+// Loan service with CRUD operations
+service LoanService {
+  rpc CreateLoan(CreateLoanRequest) returns (CreateLoanResponse);
+  rpc ReadLoan(ReadLoanRequest) returns (ReadLoanResponse);
+  rpc UpdateLoan(UpdateLoanRequest) returns (UpdateLoanResponse);
+  rpc DeleteLoan(DeleteLoanRequest) returns (DeleteLoanResponse);
+  rpc ListLoans(ListLoansRequest) returns (ListLoansResponse); // List with pagination, search, and sort
+}

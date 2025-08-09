@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package book;
+
+option go_package = "./book;book";  
+
+// Define a Book message
+message Book {
+  uint32 id = 1;
+  string title = 2;
+  string author = 3;
+  string publisher = 4;
+  int32 year = 5;
+  string isbn = 6;
+  int32 quantity = 7;
+  int32 available_quantity = 8;
+}
+
+// Request to create a book
+message CreateBookRequest {
+  Book book = 1;
+}
+
+// Response when a book is created
+message CreateBookResponse {
+  uint32 id = 1;
+}
+
+// Request to read a specific book by ID
+message ReadBookRequest {
+  uint32 id = 1;
+}
+
+// Response for reading a specific book
+message ReadBookResponse {
+  Book book = 1;
+}
+
+// Request to update a book
+message UpdateBookRequest {
+  Book book = 1;
+}
+
+// Response when a book is updated
+message UpdateBookResponse {
+  bool success = 1;
+}
+
+// Request to delete a book
+message DeleteBookRequest {
+  uint32 id = 1;
+}
+
+// Response when a book is deleted
+message DeleteBookResponse {
+  bool success = 1;
+}
+
+// Request for listing books with search, sort, and pagination
+message ListBooksRequest {
+  repeated Filter filters = 1;         // List of filters with column name and value
+  string sort_by = 2;                  // Field to sort by (e.g., title, year, etc.)
+  string sort_order = 3;               // Sort order (asc or desc)
+  int32 page = 4;                      // Page number (for pagination)
+  int32 page_size = 5;                 // Number of items per page
+}
+
+// Define the Filter message to specify column name and value
+message Filter {
+  string search_by = 1;   // The column name to filter by (e.g., title, author)
+  string value = 2;    // The value to match in the column
+}
+
+// Response for listing books with pagination
+message ListBooksResponse {
+  repeated Book books = 1;            // List of books returned
+  int32 total_count = 2;              // Total number of books matching the query
+  int32 current_page = 3;             // Current page number
+  int32 total_pages = 4;              // Total number of pages based on total_count and page_size
+  int32 page_size = 5;                // Number of books per page
+}
+
+// Book service with CRUD operations
+service BookService {
+  rpc CreateBook(CreateBookRequest) returns (CreateBookResponse);
+  rpc ReadBook(ReadBookRequest) returns (ReadBookResponse);
+  rpc UpdateBook(UpdateBookRequest) returns (UpdateBookResponse);
+  rpc DeleteBook(DeleteBookRequest) returns (DeleteBookResponse);
+  rpc ListBooks(ListBooksRequest) returns (ListBooksResponse);
+}

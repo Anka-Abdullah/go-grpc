@@ -1,0 +1,18 @@
+services:
+  grpc-app:
+    container_name: grpc_server
+    image: grpc_server_img
+    build:
+      context: ../
+      dockerfile: Docker/Dockerfile
+    volumes:
+      - ../:/go/src/app
+      - air-temp:/go/pkg/mod
+    ports:
+      - "50052:50052"
+    command: ["air", "-c", ".air.toml"]
+    environment:
+      - GO_ENV=development
+
+volumes:
+  air-temp:

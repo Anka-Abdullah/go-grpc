@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package member;
+
+option go_package = "./;member";
+
+message Member {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  int64 phone_number = 4;
+  string address = 5;
+  string registered_at = 6; // ISO 8601 datetime string
+}
+
+message CreateMemberRequest {
+  Member member = 1;
+}
+
+message CreateMemberResponse {
+  string id = 1;
+}
+
+message ReadMemberRequest {
+  string id = 1;
+}
+
+message ReadMemberResponse {
+  Member member = 1;
+}
+
+message UpdateMemberRequest {
+  Member member = 1;
+}
+
+message UpdateMemberResponse {
+  bool success = 1;
+}
+
+message DeleteMemberRequest {
+  string id = 1;
+}
+
+message DeleteMemberResponse {
+  bool success = 1;
+}
+
+message ListMembersRequest {}
+
+message ListMembersResponse {
+  repeated Member members = 1;
+}
+
+service MemberService {
+  rpc CreateMember(CreateMemberRequest) returns (CreateMemberResponse);
+  rpc ReadMember(ReadMemberRequest) returns (ReadMemberResponse);
+  rpc UpdateMember(UpdateMemberRequest) returns (UpdateMemberResponse);
+  rpc DeleteMember(DeleteMemberRequest) returns (DeleteMemberResponse);
+  rpc ListMembers(ListMembersRequest) returns (ListMembersResponse);
+}
